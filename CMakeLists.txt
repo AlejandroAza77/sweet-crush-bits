@@ -9,7 +9,11 @@ add_executable(Desafio1 main.cpp
     bits.cpp
     bits.h
     bits.h
-    bits.h)
+    bits.h
+    memoria.cpp
+    memoria.h
+    combinaciones.cpp
+    combinaciones.h)
 
 include(GNUInstallDirs)
 install(TARGETS Desafio1
