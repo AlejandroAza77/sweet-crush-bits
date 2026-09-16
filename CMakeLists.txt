@@ -13,7 +13,9 @@ add_executable(Desafio1 main.cpp
     memoria.cpp
     memoria.h
     combinaciones.cpp
-    combinaciones.h)
+    combinaciones.h
+    cascadas.cpp
+    cascadas.h)
 
 include(GNUInstallDirs)
 install(TARGETS Desafio1
