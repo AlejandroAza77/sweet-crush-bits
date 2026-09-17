@@ -12,14 +12,15 @@ int obtenerFicha(unsigned char* tablero, int columnas, int fila, int columna) {
     int valor = 0;
 
     if (offsetEnByte <= 5) {
-
+        // Caso simple: los 3 bits de la ficha caben completos en un solo byte.
+        // 1) Se desplaza el byte a la derecha para traer los 3 bits deseados
+        //    hasta las posiciones mas bajas.
+        // 2) Se aislan esos 3 bits con una mascara AND (0b111 = 7).
         valor = (tablero[byteInicial] >> offsetEnByte) & 0b111;
-
     } else {
         // Caso especial: la ficha esta repartida entre byteInicial y byteInicial+1.
         // Solo pasa cuando offsetEnByte es 6 o 7 (quedan 1 o 2 bits libres
         // en el primer byte, no los 3 completos).
-
         int bitsEnPrimerByte = 8 - offsetEnByte;   // 1 o 2 bits
         int bitsEnSegundoByte = 3 - bitsEnPrimerByte;
 
@@ -66,13 +67,13 @@ void asignarFicha(unsigned char* tablero, int columnas, int fila, int columna, i
         unsigned char mascaraParteBaja = (unsigned char)((1 << bitsEnPrimerByte) - 1);
         unsigned char mascaraParteAlta = (unsigned char)((1 << bitsEnSegundoByte) - 1);
 
-        // Primer byte: recibe los bits menos significativos del valor
+        // --- Primer byte: recibe los bits menos significativos del valor ---
         unsigned char mascaraPrimerByte = (unsigned char)(mascaraParteBaja << offsetEnByte);
         tablero[byteInicial] = (unsigned char)(tablero[byteInicial] & ~mascaraPrimerByte);
         unsigned char parteBaja = (unsigned char)(valor & mascaraParteBaja);
         tablero[byteInicial] = (unsigned char)(tablero[byteInicial] | (parteBaja << offsetEnByte));
 
-        // Segundo byte: recibe los bits mas significativos del valor
+        // --- Segundo byte: recibe los bits mas significativos del valor ---
         tablero[byteInicial + 1] = (unsigned char)(tablero[byteInicial + 1] & ~mascaraParteAlta);
         unsigned char parteAlta = (unsigned char)((valor >> bitsEnPrimerByte) & mascaraParteAlta);
         tablero[byteInicial + 1] = (unsigned char)(tablero[byteInicial + 1] | parteAlta);

@@ -1,8 +1,8 @@
 #include "bits.h"
 #include "combinaciones.h"
 
-bool detectarYMarcarHorizontal(unsigned char* tablero, int filas, int columnas) {
-    bool huboCombinacion = false;
+int detectarYMarcarHorizontal(unsigned char* tablero, int filas, int columnas) {
+    int totalCombinaciones = 0;
 
     for (int f = 0; f < filas; f++) {
 
@@ -26,7 +26,7 @@ bool detectarYMarcarHorizontal(unsigned char* tablero, int filas, int columnas) 
                     for (int k = inicioTramo; k < c; k++) {
                         asignarFicha(tablero, columnas, f, k, MARCA_ELIMINAR);
                     }
-                    huboCombinacion = true;
+                    totalCombinaciones++;
                 }
                 valorTramo = valorActual;
                 inicioTramo = c;
@@ -40,15 +40,15 @@ bool detectarYMarcarHorizontal(unsigned char* tablero, int filas, int columnas) 
             for (int k = inicioTramo; k < columnas; k++) {
                 asignarFicha(tablero, columnas, f, k, MARCA_ELIMINAR);
             }
-            huboCombinacion = true;
+            totalCombinaciones++;
         }
     }
 
-    return huboCombinacion;
+    return totalCombinaciones;
 }
 
-bool detectarYMarcarVertical(unsigned char* tablero, int filas, int columnas) {
-    bool huboCombinacion = false;
+int detectarYMarcarVertical(unsigned char* tablero, int filas, int columnas) {
+    int totalCombinaciones = 0;
 
     for (int c = 0; c < columnas; c++) {
         int valorTramo = obtenerFicha(tablero, columnas, 0, c);
@@ -70,7 +70,7 @@ bool detectarYMarcarVertical(unsigned char* tablero, int filas, int columnas) {
                     for (int k = inicioTramo; k < f; k++) {
                         asignarFicha(tablero, columnas, k, c, MARCA_ELIMINAR);
                     }
-                    huboCombinacion = true;
+                    totalCombinaciones++;
                 }
                 valorTramo = valorActual;
                 inicioTramo = f;
@@ -82,19 +82,19 @@ bool detectarYMarcarVertical(unsigned char* tablero, int filas, int columnas) {
             for (int k = inicioTramo; k < filas; k++) {
                 asignarFicha(tablero, columnas, k, c, MARCA_ELIMINAR);
             }
-            huboCombinacion = true;
+            totalCombinaciones++;
         }
     }
 
-    return huboCombinacion;
+    return totalCombinaciones;
 }
 
-bool detectarYMarcarCombinaciones(unsigned char* tablero, int filas, int columnas) {
-    // Se ejecutan ambos recorridos siempre (sin "cortocircuitar"), porque
-    // aunque el horizontal ya haya encontrado algo, el vertical tiene que
+int detectarYMarcarCombinaciones(unsigned char* tablero, int filas, int columnas) {
+    // Se ejecutan ambos recorridos siempre, sin "cortocircuitar": aunque
+    // el horizontal ya haya encontrado algo, el vertical tiene que
     // revisar el tablero igualmente.
-    bool huboHorizontal = detectarYMarcarHorizontal(tablero, filas, columnas);
-    bool huboVertical = detectarYMarcarVertical(tablero, filas, columnas);
+    int totalHorizontal = detectarYMarcarHorizontal(tablero, filas, columnas);
+    int totalVertical = detectarYMarcarVertical(tablero, filas, columnas);
 
-    return huboHorizontal || huboVertical;
+    return totalHorizontal + totalVertical;
 }

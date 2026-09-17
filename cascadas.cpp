@@ -3,11 +3,6 @@
 #include "combinaciones.h"
 #include "cascadas.h"
 
-// Genera un valor de ficha aleatorio (0 a 5), usando la biblioteca <random>
-// de C++
-// El generador y la distribucion son "static": se crean una sola vez
-// (la primera vez que se llama a esta funcion) y se reutilizan despues,
-// en vez de reconstruirse en cada llamada.
 static int fichaAleatoria() {
     static std::random_device semilla;
     static std::mt19937 generador(semilla());
@@ -59,19 +54,35 @@ void aplicarGravedadYRelleno(unsigned char* tablero, int filas, int columnas) {
     }
 }
 
-int ejecutarCicloCascadas(unsigned char* tablero, int filas, int columnas) {
-
+int ejecutarCicloCascadas(unsigned char* tablero, int filas, int columnas,
+                          int* combinacionesTotal, int* fichasEliminadasTotal) {
+    // Relleno inicial obligatorio: si esta funcion se llama justo despues
+    // de una eliminacion manual, hay exactamente un hueco que todavia
+    // nadie lleno. Quitar una sola ficha no puede por si sola crear una
+    // combinacion nueva, asi que no tiene sentido esperar a "detectar
+    // algo" antes de rellenar por primera vez.
     aplicarGravedadYRelleno(tablero, filas, columnas);
 
     int cascadas = 0;
-    bool huboCombinacion = detectarYMarcarCombinaciones(tablero, filas, columnas);
+    int sumaCombinaciones = 0;
+    int sumaFichasEliminadas = 0;
 
-    while (huboCombinacion) {
-        convertirMarcasAVacio(tablero, filas, columnas);
+    int combinacionesEncontradas = detectarYMarcarCombinaciones(tablero, filas, columnas);
+
+    while (combinacionesEncontradas > 0) {
+        sumaCombinaciones += combinacionesEncontradas;
+        sumaFichasEliminadas += convertirMarcasAVacio(tablero, filas, columnas);
         aplicarGravedadYRelleno(tablero, filas, columnas);
         cascadas++;
 
-        huboCombinacion = detectarYMarcarCombinaciones(tablero, filas, columnas);
+        combinacionesEncontradas = detectarYMarcarCombinaciones(tablero, filas, columnas);
+    }
+
+    if (combinacionesTotal != nullptr) {
+        *combinacionesTotal = sumaCombinaciones;
+    }
+    if (fichasEliminadasTotal != nullptr) {
+        *fichasEliminadasTotal = sumaFichasEliminadas;
     }
 
     return cascadas;
