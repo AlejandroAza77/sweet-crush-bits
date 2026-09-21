@@ -44,4 +44,4 @@ g++ -Wall -Wextra -std=c++17 bits.cpp memoria.cpp tablero.cpp combinaciones.cpp 
 
 ## Informe
 
-El informe preliminar de análisis y diseño se encuentra en este mismo repositorio: [`Informe_Preliminar_SweetCrush.pdf`](./Informe_Preliminar_SweetCrush.pdf).
+El informe de análisis, diseño e implementación se encuentra en este mismo repositorio: [`Informe_Final_SweetCrush.pdf`](./Informe_Final_SweetCrush.pdf).

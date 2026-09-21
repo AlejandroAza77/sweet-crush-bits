@@ -3,6 +3,7 @@
 
 #include "bits.h"
 #include "memoria.h"
+#include "combinaciones.h"
 
 // Crea e inicializa el tablero dinámico en el Heap con fichas aleatorias (0 a 5)
 unsigned char* crearTableroInicial(int filas, int columnas);

@@ -31,6 +31,27 @@ unsigned char* crearTableroInicial(int filas, int columnas) {
             asignarFicha(tablero, columnas, f, c, dist(gen));
         }
     }
+
+    // El llenado aleatorio puede, por azar, generar combinaciones de 3 o
+    // mas fichas ya formadas desde el inicio (antes de que el jugador
+    // haga cualquier movimiento), lo cual no tiene sentido en un juego
+    // de tipo match-3: el tablero inicial debe estar "estable". Se
+    // detectan y regeneran EN EL MISMO LUGAR (sin aplicar gravedad, ya
+    // que aqui no se trata de una eliminacion del jugador, solo de
+    // "volver a tirar los dados" para esas posiciones), repitiendo hasta
+    // que no quede ninguna combinacion.
+    int combosEncontrados = detectarYMarcarCombinaciones(tablero, filas, columnas);
+    while (combosEncontrados > 0) {
+        for (int f = 0; f < filas; ++f) {
+            for (int c = 0; c < columnas; ++c) {
+                if (obtenerFicha(tablero, columnas, f, c) == MARCA_ELIMINAR) {
+                    asignarFicha(tablero, columnas, f, c, dist(gen));
+                }
+            }
+        }
+        combosEncontrados = detectarYMarcarCombinaciones(tablero, filas, columnas);
+    }
+
     return tablero;
 }
 
